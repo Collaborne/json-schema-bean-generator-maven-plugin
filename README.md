@@ -50,7 +50,7 @@ After that you should be able to add the plugin:
               </includes>
               <mappingDirectory>src/main/mappings</mappingDirectory>
               <mappingIncludes>
-                <mappingInclude>*.json</include>
+                <mappingInclude>*.json</mappingInclude>
               </mappingIncludes>
               <rootUri>http://example.com/schemas/</rootUri>
               <outputDirectory>${project.build.directory}/generated-sources/beans</outputDirectory>
