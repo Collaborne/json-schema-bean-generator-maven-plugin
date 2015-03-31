@@ -35,7 +35,7 @@ After that you should be able to add the plugin:
       <plugin>
         <groupId>com.collaborne.maven</groupId>
         <artifactId>json-schema-bean-generator-maven-plugin</artifactId>
-        <version>1.0-SNAPSHOTS</version>
+        <version>1.0-SNAPSHOT</version>
         <executions>
           <execution>
             <id>generate-beans</id>
