@@ -14,3 +14,4 @@
  * limitations under the License.
  */
 assert new File(basedir, 'target/generated-sources/beans/com/collaborne/it/Simple.java').isFile();
+assert new File(basedir, 'target/classes/com/collaborne/it/Simple.class').isFile();

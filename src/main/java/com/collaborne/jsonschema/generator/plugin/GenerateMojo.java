@@ -28,6 +28,7 @@ import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugins.annotations.LifecyclePhase;
 import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.Parameter;
+import org.apache.maven.project.MavenProject;
 import org.codehaus.plexus.util.DirectoryScanner;
 
 import com.collaborne.jsonschema.generator.CodeGenerationException;
@@ -65,6 +66,13 @@ public class GenerateMojo extends AbstractMojo {
 	@Parameter
 	private URI rootUri;
 
+	/**
+	 * The current project instance. This is used for propagating generated-sources paths as compile/testCompile source
+	 * roots.
+	 */
+	@Parameter( defaultValue = "${project}", readonly = true, required = true )
+	private MavenProject project;
+
 	@Override
 	public void execute() throws MojoExecutionException {
 		Class<? extends Generator> generatorClass;
@@ -97,6 +105,7 @@ public class GenerateMojo extends AbstractMojo {
 			}
 		}
 		generator.setOutputDirectory(outputDirectory.toPath());
+		project.addCompileSourceRoot(outputDirectory.getAbsolutePath());
 
 		GeneratorDriver driver = new GeneratorDriver(generator);
 
