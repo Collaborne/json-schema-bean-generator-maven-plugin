@@ -1,0 +1,9 @@
+{
+	"mappings": [
+		{
+			"target": "simple.json#",
+			"className": "com.collaborne.it.Simple"
+		}
+	],
+	"baseUri": "http://example.com/simple.json"
+}
