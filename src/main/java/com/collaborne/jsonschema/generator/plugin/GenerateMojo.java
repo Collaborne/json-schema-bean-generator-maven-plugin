@@ -40,7 +40,7 @@ import com.google.inject.Injector;
 /**
  * Goal which processes JSON schema files into (Java) sources
  */
-@Mojo(name="generate", defaultPhase=LifecyclePhase.PROCESS_RESOURCES, threadSafe=true)
+@Mojo(name="generate", defaultPhase=LifecyclePhase.GENERATE_SOURCES, threadSafe=true)
 public class GenerateMojo extends AbstractMojo {
 	@Parameter(defaultValue="src/main/schemas")
 	private File sourceDirectory;
