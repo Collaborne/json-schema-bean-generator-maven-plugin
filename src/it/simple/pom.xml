@@ -39,7 +39,6 @@
 				<executions>
 					<execution>
 						<id>generate</id>
-						<phase>process-resources</phase>
 						<goals>
 							<goal>generate</goal>
 						</goals>
