@@ -21,7 +21,6 @@ import java.net.URI;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
@@ -44,6 +43,11 @@ import com.google.inject.Injector;
  */
 @Mojo(name="generate", defaultPhase=LifecyclePhase.GENERATE_SOURCES, threadSafe=true)
 public class GenerateMojo extends AbstractMojo {
+	public static class FeatureConfiguration {
+		public String uri;
+		public String value;
+	}
+
 	@Parameter(defaultValue="src/main/schemas")
 	private File sourceDirectory;
 	@Parameter(defaultValue="*.json")
@@ -62,7 +66,7 @@ public class GenerateMojo extends AbstractMojo {
 	private File outputDirectory;
 
 	@Parameter
-	private Map<String, String> features;
+	private List<FeatureConfiguration> features;
 
 	@Parameter
 	private URI rootUri;
@@ -87,8 +91,8 @@ public class GenerateMojo extends AbstractMojo {
 
 		Generator generator = injector.getInstance(generatorClass);
 		if (features != null) {
-			for (Map.Entry<String, String> feature : features.entrySet()) {
-				configureFeature(generator, feature.getKey(), feature.getValue());
+			for (FeatureConfiguration featureConfiguration : features) {
+				configureFeature(generator, featureConfiguration.uri, featureConfiguration.value);
 			}
 		}
 		generator.setOutputDirectory(outputDirectory.toPath());

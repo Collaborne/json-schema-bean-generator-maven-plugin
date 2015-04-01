@@ -50,6 +50,7 @@
 
 	<properties>
 		<maven.minVersion>3.2.1</maven.minVersion>
+		<json-schema-bean-generator.version>1.0-SNAPSHOT</json-schema-bean-generator.version>
 	</properties>
 
 	<dependencyManagement>
@@ -103,7 +104,7 @@
 		<dependency>
 			<groupId>com.collaborne</groupId>
 			<artifactId>json-schema-bean-generator</artifactId>
-			<version>1.0-SNAPSHOT</version>
+			<version>${json-schema-bean-generator.version}</version>
 		</dependency>
 
 		<dependency>
@@ -182,8 +183,11 @@
 							<settingsFile>src/it/settings.xml</settingsFile>
 							<goals>
 								<goal>clean</goal>
-								<goal>test-compile</goal>
+								<goal>verify</goal>
 							</goals>
+							<properties>
+								<json-schema-bean-generator.version>${json-schema-bean-generator.version}</json-schema-bean-generator.version>
+							</properties>
 						</configuration>
 						<executions>
 							<execution>
