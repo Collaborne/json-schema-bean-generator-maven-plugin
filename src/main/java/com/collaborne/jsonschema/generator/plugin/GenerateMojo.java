@@ -35,6 +35,7 @@ import com.collaborne.jsonschema.generator.CodeGenerationException;
 import com.collaborne.jsonschema.generator.Generator;
 import com.collaborne.jsonschema.generator.Generator.Feature;
 import com.collaborne.jsonschema.generator.driver.GeneratorDriver;
+import com.google.common.annotations.VisibleForTesting;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 
@@ -61,7 +62,7 @@ public class GenerateMojo extends AbstractMojo {
 	private File outputDirectory;
 
 	@Parameter
-	private Map<URI, String> features;
+	private Map<String, String> features;
 
 	@Parameter
 	private URI rootUri;
@@ -86,22 +87,8 @@ public class GenerateMojo extends AbstractMojo {
 
 		Generator generator = injector.getInstance(generatorClass);
 		if (features != null) {
-			for (Map.Entry<URI, String> feature : features.entrySet()) {
-				// XXX: Find a better way of discovering features
-				Feature<Object> tmp = new Feature<>(feature.getKey().toASCIIString(), Object.class);
-				// Try parsing: a) boolean, b) numberish, otherwise c) string
-				if ("true".equalsIgnoreCase(feature.getValue())) {
-					generator.setFeature(tmp, Boolean.TRUE);
-				} else if ("false".equalsIgnoreCase(feature.getValue())) {
-					generator.setFeature(tmp, Boolean.FALSE);
-				} else {
-					try {
-						Double value = Double.valueOf(feature.getValue());
-						generator.setFeature(tmp, value);
-					} catch (NumberFormatException e) {
-						generator.setFeature(tmp, feature.getValue());
-					}
-				}
+			for (Map.Entry<String, String> feature : features.entrySet()) {
+				configureFeature(generator, feature.getKey(), feature.getValue());
 			}
 		}
 		generator.setOutputDirectory(outputDirectory.toPath());
@@ -151,5 +138,36 @@ public class GenerateMojo extends AbstractMojo {
 		} catch (CodeGenerationException e) {
 			throw new MojoExecutionException("Cannot generate code", e);
 		}
+	}
+
+	@VisibleForTesting
+	protected void configureFeature(Generator generator, String featureUri, String featureValue) {
+		// XXX: Find a better way of discovering features
+		Feature<Object> tmp = new Feature<>(featureUri, Object.class);
+		// Try parsing: a) boolean, b) numberish, otherwise c) string
+		Object value = null;
+		if ("true".equalsIgnoreCase(featureValue)) {
+			value = Boolean.TRUE;
+		} else if ("false".equalsIgnoreCase(featureValue)) {
+			value = Boolean.FALSE;
+		} else if (featureValue != null) {
+			// Try Integer and Double, which should be the most common forms
+			try {
+				value = Integer.valueOf(featureValue);
+			} catch (NumberFormatException eInteger) {
+				try {
+					value = Double.valueOf(featureValue);
+				} catch (NumberFormatException eDouble) {
+					// Ignore this exception: we tried, and failed.
+				}
+			}
+		}
+
+		// Last resort: treat it as a string
+		// NB: we also end up here when the #getValue() returns null, which is fine.
+		if (value == null) {
+			value = featureValue;
+		}
+		generator.setFeature(tmp, value);
 	}
 }
