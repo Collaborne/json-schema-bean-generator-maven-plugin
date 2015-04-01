@@ -1,7 +1,7 @@
 language: java
 after_success: "[ ${TRAVIS_PULL_REQUEST} = 'false' ] && [ ${TRAVIS_BRANCH} = 'master' ] && mvn deploy -DskipTests=true -B --settings deploy-settings.xml"
 jdk:
-  - oraclejdk7
+  - oraclejdk8
 script: mvn test -Prun-its
 env:
   global:
