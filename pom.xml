@@ -26,13 +26,20 @@
 	<parent>
 		<groupId>com.collaborne</groupId>
 		<artifactId>collaborne-oss-parent</artifactId>
-		<version>2</version>
+		<version>3</version>
 	</parent>
 
 	<name>json-schema-bean-generator-maven-plugin Maven Plugin</name>
 	<description>A maven-plugin to generate beans from JSON schema</description>
 
 	<inceptionYear>2015</inceptionYear>
+
+	<scm>
+		<url>https://github.com/Collaborne/${project.artifactId}</url>
+		<connection>scm:git:https://github.com/Collaborne/${project.artifactId}.git</connection>
+		<developerConnection>${project.scm.connection}</developerConnection>
+		<tag>HEAD</tag>
+	</scm>
 
 	<developers>
 		<developer>
