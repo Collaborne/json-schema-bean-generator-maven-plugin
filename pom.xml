@@ -57,7 +57,7 @@
 
 	<properties>
 		<maven.minVersion>3.2.1</maven.minVersion>
-		<json-schema-bean-generator.version>1.0-SNAPSHOT</json-schema-bean-generator.version>
+		<json-schema-bean-generator.version>1.0-alpha-1</json-schema-bean-generator.version>
 	</properties>
 
 	<dependencyManagement>
