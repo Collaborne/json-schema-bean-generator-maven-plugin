@@ -54,6 +54,10 @@ After that you should be able to add the plugin:
               </mappingIncludes>
               <rootUri>http://example.com/schemas/</rootUri>
               <outputDirectory>${project.build.directory}/generated-sources/beans</outputDirectory>
+              <types>
+                <type>http://example.com/schemas/schema.json#</type>
+              </types>
+              <noImplicitTypes>false</noImplicitTypes>
             </configuration>
           </execution>
         </executions>
@@ -84,6 +88,8 @@ Setting            | Default Value                                        | Desc
 `mappingIncludes`  | `*.json`                                             | A list of include patterns for `mappingDirectory`
 `rootUri`          | (none)                                               | URI to use as base when resolving relative references. If not given it is the URI for `sourceDirectory`.
 `outputDirectory`  | `${project.build.directory}/generated-sources/beans` | The output directory for generated sources
+`types`            | (none)                                               | A list of type URIs to generate
+`noImplicitTypes`  | `false`                                              | If `true` then only the types listed in `types` are generated, otherwise also the "root type" for each schema file.
 
 License
 -------
