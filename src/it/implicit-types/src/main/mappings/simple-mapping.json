@@ -1,0 +1,13 @@
+{
+	"mappings": [
+		{
+			"target": "simple.json#",
+			"className": "com.collaborne.it.Simple"
+		},
+		{
+			"target": "simple.json#/definitions/realType",
+			"className": "com.collaborne.it.RealType"
+		}
+	],
+	"baseUri": "http://example.com/simple.json"
+}

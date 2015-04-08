@@ -20,7 +20,10 @@ import java.io.IOException;
 import java.net.URI;
 import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
@@ -34,6 +37,7 @@ import com.collaborne.jsonschema.generator.CodeGenerationException;
 import com.collaborne.jsonschema.generator.Generator;
 import com.collaborne.jsonschema.generator.Generator.Feature;
 import com.collaborne.jsonschema.generator.driver.GeneratorDriver;
+import com.github.fge.jsonschema.core.load.SchemaLoader;
 import com.google.common.annotations.VisibleForTesting;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
@@ -70,6 +74,12 @@ public class GenerateMojo extends AbstractMojo {
 
 	@Parameter
 	private URI rootUri;
+
+	@Parameter
+	private URI[] types;
+
+	@Parameter(defaultValue="false")
+	private boolean noImplicitTypes;
 
 	/**
 	 * The current project instance. This is used for propagating generated-sources paths as compile/testCompile source
@@ -135,7 +145,25 @@ public class GenerateMojo extends AbstractMojo {
 		// For now we just take the source directory, but it seems we need to split this up
 		// differently to allow multiple
 		try {
-			driver.run(sourceDirectory.toPath(), rootUri, schemaFiles);
+			SchemaLoader schemas = driver.createSchemaLoader(rootUri, sourceDirectory.toPath(), schemaFiles);
+			generator.setSchemaLoader(schemas);
+
+			Set<URI> allTypes = new HashSet<>();
+			if (types != null) {
+				Collections.addAll(allTypes, types);
+			}
+
+			// Add all implicit types (i.e. one for each schema file with an empty pointer):
+			if (!noImplicitTypes) {
+				allTypes.addAll(driver.getInitialTypes(rootUri, sourceDirectory.toPath(), schemaFiles));
+			}
+
+			if (allTypes.isEmpty()) {
+				// In principle this is ok, albeit a bit weird.
+				getLog().warn("No types for generation");
+			} else {
+				driver.generate(allTypes);
+			}
 		} catch (IOException e) {
 			// XXX: IOException is not specific enough, we need a better handling here
 			throw new MojoExecutionException("Cannot load schemas", e);
